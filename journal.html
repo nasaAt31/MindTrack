@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journal</title>
+<link rel="stylesheet" href="./css/style.css">
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    margin:0;
+    background: linear-gradient(135deg, #e0f2fe, #f1f8ff);
+}
+
+/* MAIN CONTAINER */
+.journal-container{
+    max-width:800px;
+    margin:40px auto;
+    padding:20px;
+}
+
+/* CARDS */
+.card{
+    background: rgba(255,255,255,0.75);
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.1);
+    margin-bottom:20px;
+}
+
+/* TEXTAREA */
+textarea{
+    width:100%;
+    height:120px;
+    padding:10px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    resize:none;
+}
+
+/* BUTTON */
+button{
+    margin-top:10px;
+    padding:10px 15px;
+    border:none;
+    border-radius:10px;
+    background:#4a90e2;
+    color:white;
+    cursor:pointer;
+}
+
+/* ENTRY */
+.entry{
+    padding:10px;
+    border-bottom:1px solid #ddd;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="journal-container">
+
+    <!-- INPUT -->
+    <div class="card">
+        <h2>📓 Write Your Thoughts</h2>
+
+        <textarea id="journalText" placeholder="How are you feeling today?"></textarea>
+
+        <button onclick="saveEntry()">Save Entry</button>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="card">
+        <h2>📝 Past Entries</h2>
+        <div id="entries"></div>
+    </div>
+
+</div>
+
+<script>
+
+/* ================= AI MOOD DETECTION ================= */
+function detectMood(text){
+
+    text = text.toLowerCase();
+
+    let score = 0;
+
+    // positive words
+    if(text.includes("happy") || text.includes("good") || text.includes("great") || text.includes("awesome")){
+        score += 2;
+    }
+
+    if(text.includes("calm") || text.includes("peace") || text.includes("relax")){
+        score += 1;
+    }
+
+    // negative words
+    if(text.includes("sad") || text.includes("tired") || text.includes("bad")){
+        score -= 2;
+    }
+
+    if(text.includes("stress") || text.includes("anxious") || text.includes("worried")){
+        score -= 3;
+    }
+
+    if(score >= 2){
+        return "😊 Happy";
+    }
+    else if(score >= 0){
+        return "😌 Calm";
+    }
+    else if(score < 0 && score > -3){
+        return "😔 Sad";
+    }
+    else{
+        return "😫 Stressed";
+    }
+}
+
+/* ================= SAVE ENTRY ================= */
+function saveEntry(){
+
+    let text = document.getElementById("journalText").value;
+
+    if(text === ""){
+        alert("Please write something first!");
+        return;
+    }
+
+    let mood = detectMood(text);
+
+    let entries = JSON.parse(localStorage.getItem("journal")) || [];
+
+    entries.push({
+        text: text,
+        mood: mood,
+        date: new Date().toLocaleDateString()
+    });
+
+    localStorage.setItem("journal", JSON.stringify(entries));
+
+    document.getElementById("journalText").value = "";
+
+    loadEntries();
+}
+
+/* ================= LOAD ENTRIES ================= */
+function loadEntries(){
+
+    let entries = JSON.parse(localStorage.getItem("journal")) || [];
+
+    let container = document.getElementById("entries");
+
+    container.innerHTML = "";
+
+    entries.reverse().forEach(e => {
+
+        container.innerHTML += `
+            <div class="entry">
+                <b>${e.date}</b><br>
+                <b>${e.mood}</b><br>
+                ${e.text}
+            </div>
+        `;
+    });
+}
+
+/* INIT */
+loadEntries();
+
+</script>
+
+</body>
+</html>

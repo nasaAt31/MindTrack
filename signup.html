@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup - MindTrack</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+
+    <style>
+
+        body{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            min-height:100vh;
+            background:linear-gradient(135deg,#A18CD1,#FBC2EB);
+            font-family:Poppins,sans-serif;
+        }
+
+        .signup-box{
+            width:400px;
+            padding:40px;
+            border-radius:20px;
+            background:rgba(255,255,255,0.15);
+            backdrop-filter:blur(10px);
+            color:white;
+            text-align:center;
+        }
+
+        .signup-box h1{
+            margin-bottom:30px;
+        }
+
+        .signup-box input{
+            width:100%;
+            padding:15px;
+            margin:15px 0;
+            border:none;
+            border-radius:10px;
+            outline:none;
+        }
+
+        .signup-box button{
+            width:100%;
+            padding:15px;
+            border:none;
+            border-radius:10px;
+            background:white;
+            color:#7B2CBF;
+            font-weight:600;
+            cursor:pointer;
+            margin-top:15px;
+        }
+
+        .signup-box p{
+            margin-top:20px;
+        }
+
+        .signup-box a{
+            color:white;
+            font-weight:600;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="signup-box">
+
+        <h1>Create Account</h1>
+
+        <input type="email" id="signupEmail" placeholder="Enter Email">
+
+        <input type="password" id="signupPassword" placeholder="Enter Password">
+
+        <button id="signupBtn">Create Account</button>
+
+        <p>
+            Already have an account?
+            <a href="./login.html">Login</a>
+        </p>
+
+    </div>
+
+    <!-- Firebase -->
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+    <script src="js/firebase.js"></script>
+
+    <script src="js/auth.js"></script>
+
+</body>
+</html>
