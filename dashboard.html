@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindTrack Dashboard</title>
+
+   <link rel="stylesheet" href="dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+
+<div class="app">
+
+    <!-- ================= SIDEBAR (NEW FIX) ================= -->
+    <div class="sidebar">
+
+        <h2>🧠 MindTrack</h2>
+
+        <button onclick="window.location.href='./dashboard.html'">📊 Dashboard</button>
+<button onclick="window.location.href='analytics.html'">📈 Analytics</button>
+<button onclick="window.location.href='journal.html'">📓 Journal</button>
+<button onclick="window.location.href='./wellness.html'">🧘 Wellness</button>
+<button onclick="window.location.href='calm.html'">🌿 Calm Mode</button>
+<button onclick="window.location.href='./login.html'">🚪 Logout</button>
+
+    </div>
+
+
+
+<div class="main">
+
+    <!-- TOP -->
+    <div class="top-section">
+        <h1>Welcome Back 👋</h1>
+
+        <button onclick="toggleDarkMode()">🌙 Dark Mode</button>
+    </div>
+
+    <p class="subtitle">Your wellness journey matters 💜</p>
+
+    <!-- ================= STATS ================= -->
+    <div class="stats">
+
+        <div class="card">
+            <h3>😊 Mood Status</h3>
+            <p id="moodStatus">Loading...</p>
+        </div>
+
+        <div class="card">
+            <h3>📈 Stress Level</h3>
+            <p id="stressStatus">Loading...</p>
+        </div>
+
+        <div class="card">
+            <h3>🔥 Wellness Streak</h3>
+            <p>5 Days</p>
+        </div>
+
+        <div class="card">
+            <h3>📅 Total Entries</h3>
+            <p id="totalEntries">0</p>
+        </div>
+
+    </div>
+
+    <!-- ================= CHART ================= -->
+    <div class="card" style="margin-top:20px;">
+        <h2>📊 Stress Analytics</h2>
+        <canvas id="stressChart"></canvas>
+    </div>
+
+    <!-- ================= AI SUGGESTIONS ================= -->
+    <div class="card" style="margin-top:20px;">
+
+        <h2>💡 AI Wellness Suggestions</h2>
+
+        <p>☕ Take short breaks</p>
+        <p>🎵 Listen to calming music</p>
+        <p>🧘 Try meditation</p>
+
+    </div>
+
+    <!-- ================= WELLNESS SECTION ================= -->
+    <div class="card" style="margin-top:20px;">
+
+        <h2>🌿 Wellness Suggestions</h2>
+
+        <p>🧘 Practice deep breathing</p>
+        <p>🚶 Go for a short walk</p>
+        <p>💧 Drink enough water</p>
+        <p>🎵 Listen to calming music</p>
+
+    </div>
+
+    <!-- ================= ANALYTICS TEXT ================= -->
+    <div class="card" style="margin-top:20px;">
+
+        <h2>📊 AI Mood Analytics</h2>
+
+        <p id="happyCount"></p>
+        <p id="calmCount"></p>
+        <p id="sadCount"></p>
+        <p id="stressCount"></p>
+
+    </div>
+
+</div>
+</div>
+
+<script>
+
+const ctx = document.getElementById('stressChart');
+
+
+function renderChart(){
+
+    let ctx = document.getElementById("stressChart");
+
+    if(!ctx) return;
+
+    new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+            datasets: [{
+                label: "Stress Level",
+                data: [3,5,2,6,4,7,5],
+                borderWidth: 2
+            }]
+        }
+    });
+}
+
+renderChart();
+
+</script>
+<script>
+
+// Get Saved Entries
+
+let entries =
+JSON.parse(localStorage.getItem("mindtrackEntries")) || [];
+
+// Mood + Stress
+
+if(entries.length > 0){
+
+    const latest =
+    entries[entries.length - 1];
+
+    // Mood
+
+    const moodElement =
+    document.getElementById("moodStatus");
+
+    if(moodElement){
+
+        moodElement.innerText =
+        latest.mood;
+
+    }
+
+    // Stress
+
+    const stressElement =
+    document.getElementById("stressStatus");
+
+    if(stressElement){
+
+        stressElement.innerText =
+        latest.stress + " / 10";
+
+    }
+
+
+}
+
+</script>
+<script>
+
+// Go to Calm Mode
+
+function goCalm(){
+
+    window.location.href = "calm.html";
+
+}
+
+// Go to Journal
+
+function goJournal(){
+
+    window.location.href = "journal.html";
+
+}
+
+// Dashboard
+
+function goDashboard(){
+
+    window.location.href = "./dashboard.html";
+
+}
+
+// Logout
+
+// Logout SAFE FIX
+
+const logoutBtn =
+document.getElementById("logoutBtn");
+
+if(logoutBtn){
+
+    logoutBtn.addEventListener("click", () => {
+
+        localStorage.removeItem("isLoggedIn");
+
+        alert("Logged Out Successfully");
+
+        window.location.href = "./login.html";
+
+    });
+
+}
+
+
+</script>
+<script>
+
+// Dark Mode
+
+function toggleDarkMode(){
+
+    document.body.classList.toggle("dark-mode");
+
+}
+
+</script>
+<script>
+
+function getJournalData(){
+    return JSON.parse(localStorage.getItem("journal")) || [];
+}
+
+function calculateMoodStats(){
+
+    let data = getJournalData();
+
+    let stats = {
+        "😊 Happy": 0,
+        "😌 Calm": 0,
+        "😔 Sad": 0,
+        "😫 Stressed": 0
+    };
+
+    data.forEach(e => {
+        if(stats[e.mood] !== undefined){
+            stats[e.mood]++;
+        }
+    });
+
+    return stats;
+}
+
+function loadDashboard(){
+
+    let data = getJournalData();
+    let stats = calculateMoodStats();
+
+    // total entries
+    let total = document.getElementById("totalEntries");
+    if(total) total.innerText = data.length;
+
+    // mood analytics
+    let happy = document.getElementById("happyCount");
+    let calm = document.getElementById("calmCount");
+    let sad = document.getElementById("sadCount");
+    let stress = document.getElementById("stressCount");
+
+    if(happy) happy.innerText = "😊 Happy: " + stats["😊 Happy"];
+    if(calm) calm.innerText = "😌 Calm: " + stats["😌 Calm"];
+    if(sad) sad.innerText = "😔 Sad: " + stats["😔 Sad"];
+    if(stress) stress.innerText = "😫 Stressed: " + stats["😫 Stressed"];
+
+    // last mood (safe check)
+    if(data.length > 0){
+        let last = data[data.length - 1];
+
+        let moodStatus = document.getElementById("moodStatus");
+        let stressStatus = document.getElementById("stressStatus");
+
+        if(moodStatus) moodStatus.innerText = last.mood;
+        if(stressStatus) stressStatus.innerText = "From journal data";
+    }
+    else{
+        let moodStatus = document.getElementById("moodStatus");
+        let stressStatus = document.getElementById("stressStatus");
+
+        if(moodStatus) moodStatus.innerText = "No data yet";
+        if(stressStatus) stressStatus.innerText = "No data yet";
+    }
+}
+
+// run once page loads
+loadDashboard();
+
+// update when user returns to tab
+window.addEventListener("focus", loadDashboard);
+
+</script>
+
+<script>
+window.onload = function () {
+
+    if(localStorage.getItem("isLoggedIn") !== "true"){
+        window.location.href = "./login.html";
+    }
+
+};
+</script>
+
+</body>
+</html>
