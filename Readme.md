@@ -7,7 +7,7 @@ MindTrack is a **web-based mental wellness tracking application** designed to he
 ## 🚀 Live Demo
 (After GitHub Pages deployment, add your link here)
 
-👉 https://yourusername.github.io/MindTrack/
+👉 https://nasaat31.github.io/MindTrack/
 
 ---
 
